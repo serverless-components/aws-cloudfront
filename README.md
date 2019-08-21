@@ -45,7 +45,7 @@ AWS_SECRET_ACCESS_KEY=XXX
 ```yml
 # serverless.yml
 
-myWebsite:
+distribution:
   component: '@serverless/aws-cloudfront'
   inputs:
     region: us-east-1
