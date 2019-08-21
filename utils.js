@@ -12,7 +12,7 @@ const getOriginConfig = (origin) => {
   }
 
   if (origin.includes('s3')) {
-    const bucketName = origin.replace('http://', '').split('.')[0]
+    const bucketName = origin.replace('https://', '').split('.')[0]
     originConfig.Id = bucketName
     originConfig.DomainName = `${bucketName}.s3.amazonaws.com`
   }
@@ -97,7 +97,7 @@ const createCloudFrontDistribution = async (cf, inputs) => {
   return {
     id: res.Distribution.Id,
     arn: res.Distribution.ARN,
-    url: res.Distribution.DomainName
+    url: `https://${res.Distribution.DomainName}`
   }
 }
 
@@ -133,7 +133,27 @@ const updateCloudFrontDistribution = async (cf, distributionId, inputs) => {
   return {
     id: res.Distribution.Id,
     arn: res.Distribution.ARN,
-    url: res.Distribution.DomainName
+    url: `https://${res.Distribution.DomainName}`
+  }
+}
+
+const disableCloudFrontDistribution = async (cf, distributionId) => {
+  const params = await cf.getDistributionConfig({ Id: distributionId }).promise()
+
+  params.IfMatch = params.ETag
+
+  delete params.ETag
+
+  params.Id = distributionId
+
+  params.DistributionConfig.Enabled = false
+
+  const res = await cf.updateDistribution(params).promise()
+
+  return {
+    id: res.Distribution.Id,
+    arn: res.Distribution.ARN,
+    url: `https://${res.Distribution.DomainName}`
   }
 }
 
@@ -144,7 +164,9 @@ const deleteCloudFrontDistribution = async (cf, distributionId) => {
     const params = { Id: distributionId, IfMatch: res.ETag }
     await cf.deleteDistribution(params).promise()
   } catch (e) {
-    if (e.code !== '') {
+    if (e.code === 'DistributionNotDisabled') {
+      await disableCloudFrontDistribution(cf, distributionId)
+    } else {
       throw e
     }
   }
