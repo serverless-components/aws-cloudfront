@@ -1,7 +1,7 @@
 const getOriginConfig = (origin) => {
   const originConfig = {
-    Id: '',
-    DomainName: '',
+    Id: origin,
+    DomainName: origin,
     CustomHeaders: {
       Quantity: 0,
       Items: []
