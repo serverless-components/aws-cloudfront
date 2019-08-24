@@ -10,25 +10,29 @@ const promisifyMock = (mockFn) => {
 const mockCreateDistribution = jest.fn()
 const mockCreateDistributionPromise = promisifyMock(mockCreateDistribution)
 
+const mockUpdateDistribution = jest.fn()
+const mockUpdateDistributionPromise = promisifyMock(mockUpdateDistribution)
+
 const mockGetDistributionConfig = jest.fn()
 const mockGetDistributionConfigPromise = promisifyMock(mockGetDistributionConfig)
 
 const mockDeleteDistribution = jest.fn()
 const mockDeleteDistributionPromise = promisifyMock(mockDeleteDistribution)
 
-jest.mock('aws-sdk', () => ({
-  CloudFront: jest.fn(() => ({
-    createDistribution: mockCreateDistribution,
-    getDistributionConfig: mockGetDistributionConfig,
-    deleteDistribution: mockDeleteDistribution
-  }))
-}))
-
 module.exports = {
   mockCreateDistribution,
+  mockUpdateDistribution,
   mockGetDistributionConfig,
   mockDeleteDistribution,
   mockCreateDistributionPromise,
+  mockUpdateDistributionPromise,
   mockGetDistributionConfigPromise,
-  mockDeleteDistributionPromise
+  mockDeleteDistributionPromise,
+
+  CloudFront: jest.fn(() => ({
+    createDistribution: mockCreateDistribution,
+    updateDistribution: mockUpdateDistribution,
+    getDistributionConfig: mockGetDistributionConfig,
+    deleteDistribution: mockDeleteDistribution
+  }))
 }

@@ -1,23 +1,52 @@
+const url = require('url')
+
 const getOriginConfig = (origin) => {
+  const originUrl = typeof origin === 'string' ? origin : origin.url
+
+  const { hostname } = url.parse(originUrl)
+
   const originConfig = {
-    Id: origin,
-    DomainName: origin,
-    CustomHeaders: {
-      Quantity: 0,
-      Items: []
-    },
-    S3OriginConfig: {
+    Id: hostname,
+    DomainName: hostname
+  }
+
+  if (originUrl.includes('s3')) {
+    const bucketName = hostname.split('.')[0]
+    originConfig.Id = bucketName
+    originConfig.DomainName = `${bucketName}.s3.amazonaws.com`
+    originConfig.S3OriginConfig = {
       OriginAccessIdentity: ''
+    }
+  } else {
+    originConfig.CustomOriginConfig = {
+      HTTPPort: 80,
+      HTTPSPort: 443,
+      OriginProtocolPolicy: 'https-only'
     }
   }
 
-  if (origin.includes('s3')) {
-    const bucketName = origin.replace('https://', '').split('.')[0]
-    originConfig.Id = bucketName
-    originConfig.DomainName = `${bucketName}.s3.amazonaws.com`
-  }
-
   return originConfig
+}
+
+const getCacheBehavior = (pathPattern, pathPatternConfig, originId) => {
+  const { ttl } = pathPatternConfig
+
+  return {
+    ForwardedValues: {
+      Cookies: {
+        Forward: 'all'
+      },
+      QueryString: true
+    },
+    MinTTL: ttl,
+    PathPattern: pathPattern,
+    TargetOriginId: originId,
+    TrustedSigners: {
+      Enabled: false
+    },
+    ViewerProtocolPolicy: 'https-only',
+    Compress: true
+  }
 }
 
 const getDefaultCacheBehavior = (originId) => {
@@ -64,6 +93,44 @@ const getDefaultCacheBehavior = (originId) => {
   }
 }
 
+const parseInputOrigins = (origins) => {
+  const distributionOrigins = {
+    Quantity: 0,
+    Items: []
+  }
+  let distributionCacheBehaviors
+
+  for (const origin of origins) {
+    const originConfig = getOriginConfig(origin)
+
+    distributionOrigins.Quantity = distributionOrigins.Quantity + 1
+    distributionOrigins.Items.push(originConfig)
+
+    if (typeof origin === 'object') {
+      // add any cache behaviors
+      for (const pathPattern in origin.pathPatterns) {
+        const cacheBehavior = getCacheBehavior(
+          pathPattern,
+          origin.pathPatterns[pathPattern],
+          originConfig.Id
+        )
+
+        distributionCacheBehaviors = {
+          Quantity: 0,
+          Items: []
+        }
+        distributionCacheBehaviors.Quantity = distributionCacheBehaviors.Quantity + 1
+        distributionCacheBehaviors.Items.push(cacheBehavior)
+      }
+    }
+  }
+
+  return {
+    Origins: distributionOrigins,
+    CacheBehaviors: distributionCacheBehaviors
+  }
+}
+
 const createCloudFrontDistribution = async (cf, inputs) => {
   const params = {
     DistributionConfig: {
@@ -83,13 +150,17 @@ const createCloudFrontDistribution = async (cf, inputs) => {
     }
   }
 
-  for (const origin of inputs.origins) {
-    const originConfig = getOriginConfig(origin)
-    // console.log(originConfig)
-    params.DistributionConfig.Origins.Quantity = params.DistributionConfig.Origins.Quantity + 1
-    params.DistributionConfig.Origins.Items.push(originConfig)
+  const distributionConfig = params.DistributionConfig
 
-    params.DistributionConfig.DefaultCacheBehavior = getDefaultCacheBehavior(originConfig.Id)
+  const { Origins, CacheBehaviors } = parseInputOrigins(inputs.origins)
+
+  distributionConfig.Origins = Origins
+
+  // set first origin declared as the default cache behavior
+  distributionConfig.DefaultCacheBehavior = getDefaultCacheBehavior(Origins.Items[0].Id)
+
+  if (CacheBehaviors) {
+    distributionConfig.CacheBehaviors = CacheBehaviors
   }
 
   const res = await cf.createDistribution(params).promise()
@@ -122,9 +193,12 @@ const updateCloudFrontDistribution = async (cf, distributionId, inputs) => {
 
   params.DistributionConfig.Enabled = inputs.enabled === false ? false : true
 
-  for (const origin of inputs.origins) {
-    params.DistributionConfig.Origins.Quantity = params.DistributionConfig.Origins.Quantity + 1
-    params.DistributionConfig.Origins.Items.push(getOriginConfig(origin))
+  const { Origins, CacheBehaviors } = parseInputOrigins(inputs.origins)
+
+  params.DistributionConfig.Origins = Origins
+
+  if (CacheBehaviors) {
+    params.DistributionConfig.CacheBehaviors = CacheBehaviors
   }
 
   // 6. then finally update!
