@@ -25,7 +25,7 @@ Object {
             "Quantity": 2,
           },
           "Compress": true,
-          "DefaultTTL": 0,
+          "DefaultTTL": 10,
           "FieldLevelEncryptionId": "",
           "ForwardedValues": Object {
             "Cookies": Object {
@@ -45,7 +45,7 @@ Object {
             "Items": Array [],
             "Quantity": 0,
           },
-          "MaxTTL": 0,
+          "MaxTTL": 10,
           "MinTTL": 10,
           "PathPattern": "/some/path",
           "SmoothStreaming": false,
@@ -163,7 +163,7 @@ Object {
             "Quantity": 2,
           },
           "Compress": true,
-          "DefaultTTL": 0,
+          "DefaultTTL": 10,
           "FieldLevelEncryptionId": "",
           "ForwardedValues": Object {
             "Cookies": Object {
@@ -183,7 +183,7 @@ Object {
             "Items": Array [],
             "Quantity": 0,
           },
-          "MaxTTL": 0,
+          "MaxTTL": 10,
           "MinTTL": 10,
           "PathPattern": "/some/other/path",
           "SmoothStreaming": false,
