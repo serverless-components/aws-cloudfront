@@ -7,7 +7,12 @@ const getOriginConfig = (origin) => {
 
   const originConfig = {
     Id: hostname,
-    DomainName: hostname
+    DomainName: hostname,
+    CustomHeaders: {
+      Quantity: 0,
+      Items: []
+    },
+    OriginPath: ''
   }
 
   if (originUrl.includes('s3')) {
@@ -21,7 +26,13 @@ const getOriginConfig = (origin) => {
     originConfig.CustomOriginConfig = {
       HTTPPort: 80,
       HTTPSPort: 443,
-      OriginProtocolPolicy: 'https-only'
+      OriginProtocolPolicy: 'https-only',
+      OriginSslProtocols: {
+        Quantity: 1,
+        Items: ['TLSv1.2']
+      },
+      OriginReadTimeout: 30,
+      OriginKeepaliveTimeout: 5
     }
   }
 
@@ -36,16 +47,41 @@ const getCacheBehavior = (pathPattern, pathPatternConfig, originId) => {
       Cookies: {
         Forward: 'all'
       },
-      QueryString: true
+      QueryString: true,
+      Headers: {
+        Quantity: 0,
+        Items: []
+      },
+      QueryStringCacheKeys: {
+        Quantity: 0,
+        Items: []
+      }
     },
     MinTTL: ttl,
     PathPattern: pathPattern,
     TargetOriginId: originId,
     TrustedSigners: {
-      Enabled: false
+      Enabled: false,
+      Quantity: 0
     },
     ViewerProtocolPolicy: 'https-only',
-    Compress: true
+    AllowedMethods: {
+      Quantity: 2,
+      Items: ['GET', 'HEAD'],
+      CachedMethods: {
+        Items: ['GET', 'HEAD'],
+        Quantity: 2
+      }
+    },
+    Compress: true,
+    SmoothStreaming: false,
+    DefaultTTL: 0,
+    MaxTTL: 0,
+    FieldLevelEncryptionId: '',
+    LambdaFunctionAssociations: {
+      Quantity: 0,
+      Items: []
+    }
   }
 }
 
@@ -195,6 +231,7 @@ const updateCloudFrontDistribution = async (cf, distributionId, inputs) => {
 
   const { Origins, CacheBehaviors } = parseInputOrigins(inputs.origins)
 
+  params.DistributionConfig.DefaultCacheBehavior = getDefaultCacheBehavior(Origins.Items[0].Id)
   params.DistributionConfig.Origins = Origins
 
   if (CacheBehaviors) {

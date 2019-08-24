@@ -61,13 +61,26 @@ Object {
     "Origins": Object {
       "Items": Array [
         Object {
+          "CustomHeaders": Object {
+            "Items": Array [],
+            "Quantity": 0,
+          },
           "CustomOriginConfig": Object {
             "HTTPPort": 80,
             "HTTPSPort": 443,
+            "OriginKeepaliveTimeout": 5,
             "OriginProtocolPolicy": "https-only",
+            "OriginReadTimeout": 30,
+            "OriginSslProtocols": Object {
+              "Items": Array [
+                "TLSv1.2",
+              ],
+              "Quantity": 1,
+            },
           },
           "DomainName": "mycustomorigin.com",
           "Id": "mycustomorigin.com",
+          "OriginPath": "",
         },
       ],
       "Quantity": 1,
@@ -80,17 +93,77 @@ Object {
 exports[`Input origin as a custom url updates distribution 1`] = `
 Object {
   "DistributionConfig": Object {
+    "DefaultCacheBehavior": Object {
+      "AllowedMethods": Object {
+        "CachedMethods": Object {
+          "Items": Array [
+            "HEAD",
+            "GET",
+          ],
+          "Quantity": 2,
+        },
+        "Items": Array [
+          "HEAD",
+          "GET",
+        ],
+        "Quantity": 2,
+      },
+      "Compress": false,
+      "DefaultTTL": 86400,
+      "FieldLevelEncryptionId": "",
+      "ForwardedValues": Object {
+        "Cookies": Object {
+          "Forward": "none",
+        },
+        "Headers": Object {
+          "Items": Array [],
+          "Quantity": 0,
+        },
+        "QueryString": false,
+        "QueryStringCacheKeys": Object {
+          "Items": Array [],
+          "Quantity": 0,
+        },
+      },
+      "LambdaFunctionAssociations": Object {
+        "Items": Array [],
+        "Quantity": 0,
+      },
+      "MaxTTL": 31536000,
+      "MinTTL": 0,
+      "SmoothStreaming": false,
+      "TargetOriginId": "mycustomoriginupdated.com",
+      "TrustedSigners": Object {
+        "Enabled": false,
+        "Items": Array [],
+        "Quantity": 0,
+      },
+      "ViewerProtocolPolicy": "redirect-to-https",
+    },
     "Enabled": true,
     "Origins": Object {
       "Items": Array [
         Object {
+          "CustomHeaders": Object {
+            "Items": Array [],
+            "Quantity": 0,
+          },
           "CustomOriginConfig": Object {
             "HTTPPort": 80,
             "HTTPSPort": 443,
+            "OriginKeepaliveTimeout": 5,
             "OriginProtocolPolicy": "https-only",
+            "OriginReadTimeout": 30,
+            "OriginSslProtocols": Object {
+              "Items": Array [
+                "TLSv1.2",
+              ],
+              "Quantity": 1,
+            },
           },
           "DomainName": "mycustomoriginupdated.com",
           "Id": "mycustomoriginupdated.com",
+          "OriginPath": "",
         },
       ],
       "Quantity": 1,

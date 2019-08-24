@@ -36,7 +36,12 @@ describe('Input origin as an S3 bucket url', () => {
                 DomainName: 'mybucket.s3.amazonaws.com',
                 S3OriginConfig: {
                   OriginAccessIdentity: ''
-                }
+                },
+                CustomHeaders: {
+                  Quantity: 0,
+                  Items: []
+                },
+                OriginPath: ''
               }
             ]
           })

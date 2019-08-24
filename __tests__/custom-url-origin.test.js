@@ -37,8 +37,19 @@ describe('Input origin as a custom url', () => {
                 CustomOriginConfig: {
                   HTTPPort: 80,
                   HTTPSPort: 443,
-                  OriginProtocolPolicy: 'https-only'
-                }
+                  OriginProtocolPolicy: 'https-only',
+                  OriginSslProtocols: {
+                    Quantity: 1,
+                    Items: ['TLSv1.2']
+                  },
+                  OriginReadTimeout: 30,
+                  OriginKeepaliveTimeout: 5
+                },
+                CustomHeaders: {
+                  Quantity: 0,
+                  Items: []
+                },
+                OriginPath: ''
               }
             ]
           })
@@ -82,8 +93,19 @@ describe('Input origin as a custom url', () => {
                 CustomOriginConfig: {
                   HTTPPort: 80,
                   HTTPSPort: 443,
-                  OriginProtocolPolicy: 'https-only'
-                }
+                  OriginProtocolPolicy: 'https-only',
+                  OriginSslProtocols: {
+                    Quantity: 1,
+                    Items: ['TLSv1.2']
+                  },
+                  OriginReadTimeout: 30,
+                  OriginKeepaliveTimeout: 5
+                },
+                CustomHeaders: {
+                  Quantity: 0,
+                  Items: []
+                },
+                OriginPath: ''
               }
             ]
           })
