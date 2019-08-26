@@ -20,12 +20,24 @@ module.exports = {
     return component
   },
 
-  assertCacheBehaviorsContainsItem: (spy, item) => {
+  assertHasCacheBehavior: (spy, cacheBehavior) => {
     expect(spy).toBeCalledWith(
       expect.objectContaining({
         DistributionConfig: expect.objectContaining({
           CacheBehaviors: expect.objectContaining({
-            Items: [expect.objectContaining(item)]
+            Items: [expect.objectContaining(cacheBehavior)]
+          })
+        })
+      })
+    )
+  },
+
+  assertHasOrigin: (spy, origin) => {
+    expect(spy).toBeCalledWith(
+      expect.objectContaining({
+        DistributionConfig: expect.objectContaining({
+          Origins: expect.objectContaining({
+            Items: [expect.objectContaining(origin)]
           })
         })
       })

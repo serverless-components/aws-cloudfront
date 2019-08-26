@@ -1,4 +1,4 @@
-const { createComponent, assertCacheBehaviorsContainsItem } = require('../test-utils')
+const { createComponent, assertHasCacheBehavior } = require('../test-utils')
 
 const { mockCreateDistribution, mockCreateDistributionPromise } = require('aws-sdk')
 
@@ -35,7 +35,7 @@ describe('Input origin as a custom url', () => {
       ]
     })
 
-    assertCacheBehaviorsContainsItem(mockCreateDistribution, {
+    assertHasCacheBehavior(mockCreateDistribution, {
       PathPattern: '/some/path',
       LambdaFunctionAssociations: {
         Quantity: 1,

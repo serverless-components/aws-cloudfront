@@ -1,4 +1,4 @@
-const { createComponent } = require('../test-utils')
+const { createComponent, assertHasCacheBehavior, assertHasOrigin } = require('../test-utils')
 
 const {
   mockCreateDistribution,
@@ -35,29 +35,17 @@ describe('Input origin with path pattern', () => {
       ]
     })
 
-    expect(mockCreateDistribution).toBeCalledWith(
-      expect.objectContaining({
-        DistributionConfig: expect.objectContaining({
-          Origins: expect.objectContaining({
-            Items: [
-              expect.objectContaining({
-                Id: 'exampleorigin.com',
-                DomainName: 'exampleorigin.com'
-              })
-            ]
-          }),
-          CacheBehaviors: expect.objectContaining({
-            Items: [
-              expect.objectContaining({
-                PathPattern: '/some/path',
-                MinTTL: 10,
-                TargetOriginId: 'exampleorigin.com'
-              })
-            ]
-          })
-        })
-      })
-    )
+    assertHasOrigin(mockCreateDistribution, {
+      Id: 'exampleorigin.com',
+      DomainName: 'exampleorigin.com'
+    })
+
+    assertHasCacheBehavior(mockCreateDistribution, {
+      PathPattern: '/some/path',
+      MinTTL: 10,
+      TargetOriginId: 'exampleorigin.com'
+    })
+
     expect(mockCreateDistribution.mock.calls[0][0]).toMatchSnapshot()
   })
 
@@ -102,29 +90,16 @@ describe('Input origin with path pattern', () => {
       ]
     })
 
-    expect(mockUpdateDistribution).toBeCalledWith(
-      expect.objectContaining({
-        DistributionConfig: expect.objectContaining({
-          Origins: expect.objectContaining({
-            Items: [
-              expect.objectContaining({
-                Id: 'exampleorigin.com',
-                DomainName: 'exampleorigin.com'
-              })
-            ]
-          }),
-          CacheBehaviors: expect.objectContaining({
-            Items: [
-              expect.objectContaining({
-                PathPattern: '/some/other/path',
-                MinTTL: 10,
-                TargetOriginId: 'exampleorigin.com'
-              })
-            ]
-          })
-        })
-      })
-    )
+    assertHasOrigin(mockUpdateDistribution, {
+      Id: 'exampleorigin.com',
+      DomainName: 'exampleorigin.com'
+    })
+
+    assertHasCacheBehavior(mockUpdateDistribution, {
+      PathPattern: '/some/other/path',
+      MinTTL: 10,
+      TargetOriginId: 'exampleorigin.com'
+    })
 
     expect(mockUpdateDistribution.mock.calls[0][0]).toMatchSnapshot()
   })
