@@ -20,7 +20,7 @@ module.exports = {
     return component
   },
 
-  assertCacheBehaviorContainsItem: (spy, item) => {
+  assertCacheBehaviorsContainsItem: (spy, item) => {
     expect(spy).toBeCalledWith(
       expect.objectContaining({
         DistributionConfig: expect.objectContaining({
