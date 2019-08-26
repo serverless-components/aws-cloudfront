@@ -5,7 +5,7 @@ const {
   createCloudFrontDistribution,
   updateCloudFrontDistribution,
   deleteCloudFrontDistribution
-} = require('./utils')
+} = require('./lib')
 
 /*
  * Website
