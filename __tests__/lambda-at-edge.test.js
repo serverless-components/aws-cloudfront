@@ -38,7 +38,7 @@ describe('Input origin as a custom url', () => {
     assertHasCacheBehavior(mockCreateDistribution, {
       PathPattern: '/some/path',
       LambdaFunctionAssociations: {
-        Quantity: 1,
+        Quantity: 4,
         Items: [
           {
             EventType: 'viewer-request',
