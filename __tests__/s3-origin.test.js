@@ -3,7 +3,8 @@ const {
   mockUpdateDistribution,
   mockCreateDistributionPromise,
   mockGetDistributionConfigPromise,
-  mockUpdateDistributionPromise
+  mockUpdateDistributionPromise,
+  mockCreateCloudFrontOriginAccessIdentityPromise
 } = require('aws-sdk')
 
 const { createComponent } = require('../test-utils')
@@ -36,6 +37,98 @@ describe('Input origin as an S3 bucket url', () => {
                 DomainName: 'mybucket.s3.amazonaws.com',
                 S3OriginConfig: {
                   OriginAccessIdentity: ''
+                },
+                CustomHeaders: {
+                  Quantity: 0,
+                  Items: []
+                },
+                OriginPath: ''
+              }
+            ]
+          })
+        })
+      })
+    )
+    expect(mockCreateDistribution.mock.calls[0][0]).toMatchSnapshot()
+  })
+
+  it('creates distribution configured to serve private S3 content', async () => {
+    mockCreateCloudFrontOriginAccessIdentityPromise.mockResolvedValueOnce({
+      CloudFrontOriginAccessIdentity: {
+        Id: 'access-identity-xyz',
+        S3CanonicalUserId: 's3-canonical-user-id-xyz'
+      }
+    })
+
+    await component.default({
+      origins: [
+        {
+          url: 'https://mybucket.s3.amazonaws.com',
+          private: true
+        }
+      ]
+    })
+
+    expect(mockCreateDistribution).toBeCalledWith(
+      expect.objectContaining({
+        DistributionConfig: expect.objectContaining({
+          Origins: expect.objectContaining({
+            Items: [
+              {
+                Id: 'mybucket',
+                DomainName: 'mybucket.s3.amazonaws.com',
+                S3OriginConfig: {
+                  OriginAccessIdentity: 's3-canonical-user-id-xyz'
+                },
+                CustomHeaders: {
+                  Quantity: 0,
+                  Items: []
+                },
+                OriginPath: ''
+              }
+            ]
+          })
+        })
+      })
+    )
+    expect(mockCreateDistribution.mock.calls[0][0]).toMatchSnapshot()
+  })
+
+  it.skip('updates distribution configured to serve private S3 content', async () => {
+    mockGetDistributionConfigPromise.mockResolvedValueOnce({
+      ETag: 'etag',
+      DistributionConfig: {
+        Origins: {
+          Items: [
+            {
+              S3OriginConfig: {
+                OriginAccessIdentity: 's3-canonical-user-id-xyz'
+              }
+            }
+          ]
+        }
+      }
+    })
+
+    await component.default({
+      origins: [
+        {
+          url: 'https://mybucket.s3.amazonaws.com',
+          private: true
+        }
+      ]
+    })
+
+    expect(mockUpdateDistribution).toBeCalledWith(
+      expect.objectContaining({
+        DistributionConfig: expect.objectContaining({
+          Origins: expect.objectContaining({
+            Items: [
+              {
+                Id: 'mybucket',
+                DomainName: 'mybucket.s3.amazonaws.com',
+                S3OriginConfig: {
+                  OriginAccessIdentity: 's3-canonical-user-id-xyz'
                 },
                 CustomHeaders: {
                   Quantity: 0,
