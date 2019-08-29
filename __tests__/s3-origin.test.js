@@ -78,7 +78,7 @@ describe('Input origin as an S3 bucket url', () => {
                 Id: 'mybucket',
                 DomainName: 'mybucket.s3.amazonaws.com',
                 S3OriginConfig: {
-                  OriginAccessIdentity: 's3-canonical-user-id-xyz'
+                  OriginAccessIdentity: 'origin-access-identity/cloudfront/access-identity-xyz'
                 },
                 CustomHeaders: {
                   Quantity: 0,
@@ -94,19 +94,26 @@ describe('Input origin as an S3 bucket url', () => {
     expect(mockCreateDistribution.mock.calls[0][0]).toMatchSnapshot()
   })
 
-  it.skip('updates distribution configured to serve private S3 content', async () => {
+  it('updates distribution configured to serve private S3 content', async () => {
+    mockCreateCloudFrontOriginAccessIdentityPromise.mockResolvedValue({
+      CloudFrontOriginAccessIdentity: {
+        Id: 'access-identity-xyz',
+        S3CanonicalUserId: 's3-canonical-user-id-xyz'
+      }
+    })
+
     mockGetDistributionConfigPromise.mockResolvedValueOnce({
       ETag: 'etag',
       DistributionConfig: {
         Origins: {
-          Items: [
-            {
-              S3OriginConfig: {
-                OriginAccessIdentity: 's3-canonical-user-id-xyz'
-              }
-            }
-          ]
+          Items: []
         }
+      }
+    })
+
+    mockUpdateDistributionPromise.mockResolvedValueOnce({
+      Distribution: {
+        Id: 'distributionwithS3originupdated'
       }
     })
 
@@ -119,22 +126,28 @@ describe('Input origin as an S3 bucket url', () => {
       ]
     })
 
+    await component.default({
+      origins: [
+        {
+          url: 'https://anotherbucket.s3.amazonaws.com',
+          private: true
+        }
+      ]
+    })
+
     expect(mockUpdateDistribution).toBeCalledWith(
       expect.objectContaining({
         DistributionConfig: expect.objectContaining({
           Origins: expect.objectContaining({
             Items: [
               {
-                Id: 'mybucket',
-                DomainName: 'mybucket.s3.amazonaws.com',
+                Id: 'anotherbucket',
+                DomainName: 'anotherbucket.s3.amazonaws.com',
                 S3OriginConfig: {
-                  OriginAccessIdentity: 's3-canonical-user-id-xyz'
+                  OriginAccessIdentity: 'origin-access-identity/cloudfront/access-identity-xyz'
                 },
-                CustomHeaders: {
-                  Quantity: 0,
-                  Items: []
-                },
-                OriginPath: ''
+                OriginPath: '',
+                CustomHeaders: { Items: [], Quantity: 0 }
               }
             ]
           })
