@@ -86,6 +86,25 @@ distribution:
               viewer-request: arn:aws:lambda:us-east-1:123:function:myFunc:version # lambda ARN including version
 ```
 
+#### Private S3 Content
+
+To restrict access to content that you serve from S3 you can mark as `private` your S3 origins:
+
+```yml
+# serverless.yml
+
+distribution:
+  component: '@serverless/aws-cloudfront'
+  inputs:
+    origins:
+      - url: https://my-private-bucket.s3.amazonaws.com
+        private: true
+```
+
+A bucket policy will be added that grants CloudFront with access to the bucket objects. Note that it doesn't remove any existing permissions on the bucket. If users currently have permission to access the files in your bucket using Amazon S3 URLs you will need to manually remove those.
+
+This is documented in more detail here: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html
+
 ### 4. Deploy
 
 ```console
