@@ -54,9 +54,7 @@ distribution:
       - https://my-bucket.s3.amazonaws.com
 ```
 
-#### Complex origin objects
-
-You can extend your origins configuration by declaring them as objects. For example, to add cache behaviors:
+#### Custom cache behavior
 
 ```yml
 # serverless.yml
@@ -69,6 +67,23 @@ distribution:
         pathPatterns:
           /static/images: # route any /static/images requests to https://my-assets.com
             ttl: 10
+```
+
+#### Lambda@Edge
+
+```yml
+# serverless.yml
+
+distribution:
+  component: '@serverless/aws-cloudfront'
+  inputs:
+    origins:
+      - url: https://sampleorigin.com
+        pathPatterns:
+          /sample/path:
+            ttl: 10
+            lambda@edge:
+              viewer-request: arn:aws:lambda:us-east-1:123:function:myFunc:version # lambda ARN including version
 ```
 
 ### 4. Deploy
