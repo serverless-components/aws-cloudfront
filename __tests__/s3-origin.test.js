@@ -7,7 +7,7 @@ const {
   mockCreateCloudFrontOriginAccessIdentityPromise
 } = require('aws-sdk')
 
-const { createComponent } = require('../test-utils')
+const { createComponent, assertHasOrigin } = require('../test-utils')
 
 describe('Input origin as an S3 bucket url', () => {
   let component
@@ -27,28 +27,19 @@ describe('Input origin as an S3 bucket url', () => {
       origins: ['https://mybucket.s3.amazonaws.com']
     })
 
-    expect(mockCreateDistribution).toBeCalledWith(
-      expect.objectContaining({
-        DistributionConfig: expect.objectContaining({
-          Origins: expect.objectContaining({
-            Items: [
-              {
-                Id: 'mybucket',
-                DomainName: 'mybucket.s3.amazonaws.com',
-                S3OriginConfig: {
-                  OriginAccessIdentity: ''
-                },
-                CustomHeaders: {
-                  Quantity: 0,
-                  Items: []
-                },
-                OriginPath: ''
-              }
-            ]
-          })
-        })
-      })
-    )
+    assertHasOrigin(mockCreateDistribution, {
+      Id: 'mybucket',
+      DomainName: 'mybucket.s3.amazonaws.com',
+      S3OriginConfig: {
+        OriginAccessIdentity: ''
+      },
+      CustomHeaders: {
+        Quantity: 0,
+        Items: []
+      },
+      OriginPath: ''
+    })
+
     expect(mockCreateDistribution.mock.calls[0][0]).toMatchSnapshot()
   })
 
@@ -180,20 +171,10 @@ describe('Input origin as an S3 bucket url', () => {
       origins: ['https://anotherbucket.s3.amazonaws.com']
     })
 
-    expect(mockUpdateDistribution).toBeCalledWith(
-      expect.objectContaining({
-        DistributionConfig: expect.objectContaining({
-          Origins: expect.objectContaining({
-            Items: [
-              expect.objectContaining({
-                Id: 'anotherbucket',
-                DomainName: 'anotherbucket.s3.amazonaws.com'
-              })
-            ]
-          })
-        })
-      })
-    )
+    assertHasOrigin(mockUpdateDistribution, {
+      Id: 'anotherbucket',
+      DomainName: 'anotherbucket.s3.amazonaws.com'
+    })
 
     expect(mockUpdateDistribution.mock.calls[0][0]).toMatchSnapshot()
   })
