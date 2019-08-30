@@ -7,6 +7,10 @@ Object {
       "Items": Array [],
       "Quantity": 0,
     },
+    "CacheBehaviors": Object {
+      "Items": Array [],
+      "Quantity": 0,
+    },
     "CallerReference": "1566599541192",
     "Comment": "",
     "DefaultCacheBehavior": Object {
@@ -84,6 +88,10 @@ exports[`S3 origins When origin is an S3 URL only accessible via CloudFront upda
 Object {
   "DistributionConfig": Object {
     "Aliases": Object {
+      "Items": Array [],
+      "Quantity": 0,
+    },
+    "CacheBehaviors": Object {
       "Items": Array [],
       "Quantity": 0,
     },
@@ -167,6 +175,10 @@ Object {
       "Items": Array [],
       "Quantity": 0,
     },
+    "CacheBehaviors": Object {
+      "Items": Array [],
+      "Quantity": 0,
+    },
     "CallerReference": "1566599541192",
     "Comment": "",
     "DefaultCacheBehavior": Object {
@@ -243,6 +255,10 @@ Object {
 exports[`S3 origins When origin is an S3 bucket URL updates distribution 1`] = `
 Object {
   "DistributionConfig": Object {
+    "CacheBehaviors": Object {
+      "Items": Array [],
+      "Quantity": 0,
+    },
     "DefaultCacheBehavior": Object {
       "AllowedMethods": Object {
         "CachedMethods": Object {
