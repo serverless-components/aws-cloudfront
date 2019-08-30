@@ -50,6 +50,8 @@ distribution:
   inputs:
     region: us-east-1
     enabled: true # optional
+    defaults: # optional
+      ttl: 15
     origins:
       - https://my-bucket.s3.amazonaws.com
 ```
