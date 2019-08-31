@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Input origin as a custom url creates distribution with custom url origin 1`] = `
+exports[`Input origin as a custom url creates distribution with custom url origin and sets defaults 1`] = `
 Object {
   "DistributionConfig": Object {
     "Aliases": Object {
@@ -25,7 +25,7 @@ Object {
         "Quantity": 2,
       },
       "Compress": false,
-      "DefaultTTL": 86400,
+      "DefaultTTL": 10,
       "FieldLevelEncryptionId": "",
       "ForwardedValues": Object {
         "Cookies": Object {
@@ -42,8 +42,14 @@ Object {
         },
       },
       "LambdaFunctionAssociations": Object {
-        "Items": Array [],
-        "Quantity": 0,
+        "Items": Array [
+          Object {
+            "EventType": "origin-request",
+            "IncludeBody": true,
+            "LambdaFunctionARN": "arn:aws:lambda:us-east-1:123:function:originRequestFunction",
+          },
+        ],
+        "Quantity": 1,
       },
       "MaxTTL": 31536000,
       "MinTTL": 0,
