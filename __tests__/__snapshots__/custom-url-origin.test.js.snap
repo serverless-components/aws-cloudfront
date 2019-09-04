@@ -7,6 +7,10 @@ Object {
       "Items": Array [],
       "Quantity": 0,
     },
+    "CacheBehaviors": Object {
+      "Items": Array [],
+      "Quantity": 0,
+    },
     "CallerReference": "1566599541192",
     "Comment": "",
     "DefaultCacheBehavior": Object {
@@ -99,6 +103,10 @@ Object {
 exports[`Input origin as a custom url updates distribution 1`] = `
 Object {
   "DistributionConfig": Object {
+    "CacheBehaviors": Object {
+      "Items": Array [],
+      "Quantity": 0,
+    },
     "DefaultCacheBehavior": Object {
       "AllowedMethods": Object {
         "CachedMethods": Object {

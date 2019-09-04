@@ -30,17 +30,22 @@ class CloudFront extends Component {
       region: inputs.region
     })
 
+    const s3 = new aws.S3({
+      credentials: this.context.credentials.aws,
+      region: inputs.region
+    })
+
     if (this.state.id) {
       if (
         !equals(this.state.origins, inputs.origins) ||
         !equals(this.state.defaults, inputs.defaults)
       ) {
         this.context.debug(`Updating CloudFront distribution of ID ${this.state.id}.`)
-        this.state = await updateCloudFrontDistribution(cf, this.state.id, inputs)
+        this.state = await updateCloudFrontDistribution(cf, s3, this.state.id, inputs)
       }
     } else {
       this.context.debug(`Creating CloudFront distribution in the ${inputs.region} region.`)
-      this.state = await createCloudFrontDistribution(cf, inputs)
+      this.state = await createCloudFrontDistribution(cf, s3, inputs)
     }
 
     this.state.region = inputs.region
