@@ -36,7 +36,10 @@ class CloudFront extends Component {
     })
 
     if (this.state.id) {
-      if (!equals(this.state.origins, inputs.origins)) {
+      if (
+        !equals(this.state.origins, inputs.origins) ||
+        !equals(this.state.defaults, inputs.defaults)
+      ) {
         this.context.debug(`Updating CloudFront distribution of ID ${this.state.id}.`)
         this.state = await updateCloudFrontDistribution(cf, s3, this.state.id, inputs)
       }
@@ -47,6 +50,7 @@ class CloudFront extends Component {
 
     this.state.region = inputs.region
     this.state.origins = inputs.origins
+    this.state.defaults = inputs.defaults
     await this.save()
 
     this.context.debug(`CloudFront deployed successfully with URL: ${this.state.url}.`)

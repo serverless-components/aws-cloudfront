@@ -50,6 +50,10 @@ distribution:
   inputs:
     region: us-east-1
     enabled: true # optional
+    defaults: # optional
+      ttl: 15
+      lambda@edge: # added to cloudfront default cache behavior
+        viewer-request: arn:aws:lambda:us-east-1:123:function:myFunc:version
     origins:
       - https://my-bucket.s3.amazonaws.com
 ```
