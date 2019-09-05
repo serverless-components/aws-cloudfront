@@ -24,6 +24,7 @@ describe('Input origin as a custom url', () => {
   it('creates distribution with custom url origin and sets defaults', async () => {
     await component.default({
       defaults: {
+        allowedHttpMethods: ['HEAD', 'DELETE', 'POST', 'GET', 'OPTIONS', 'PUT', 'PATCH'],
         ttl: 10,
         'lambda@edge': {
           'origin-request': 'arn:aws:lambda:us-east-1:123:function:originRequestFunction'
