@@ -72,6 +72,7 @@ distribution:
         pathPatterns:
           /static/images: # route any /static/images requests to https://my-assets.com
             ttl: 10
+            allowedHttpMethods: ['GET', 'HEAD'] # optional
 ```
 
 #### Lambda@Edge

@@ -28,7 +28,8 @@ describe('Input origin with path pattern', () => {
           url: 'https://exampleorigin.com',
           pathPatterns: {
             '/some/path': {
-              ttl: 10
+              ttl: 10,
+              allowedHttpMethods: ['GET', 'HEAD', 'POST']
             }
           }
         }
