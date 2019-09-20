@@ -21,8 +21,9 @@ Object {
             "Items": Array [
               "GET",
               "HEAD",
+              "POST",
             ],
-            "Quantity": 2,
+            "Quantity": 3,
           },
           "Compress": true,
           "DefaultTTL": 10,
