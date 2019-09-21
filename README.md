@@ -53,6 +53,17 @@ distribution:
     defaults: # optional
       ttl: 15
       allowedHttpMethods: ['HEAD', 'GET']
+      forward: # optional
+        # array of header names, 'none' or 'all'
+        headers: ['Accept', 'Accept-Language']
+        # array of cookie names, 'none' or 'all'
+        cookies: ['my-cookie]
+        queryString: true
+        queryStringCacheKeys: ['queryKey']
+      viewerProtocolPolicy: 'https-only' # optional
+      smoothStreaming: true # optional
+      compress: true # optional
+      fieldLevelEncryptionId: '123' # optional
       lambda@edge: # added to cloudfront default cache behavior
         viewer-request: arn:aws:lambda:us-east-1:123:function:myFunc:version
     origins:
@@ -60,7 +71,7 @@ distribution:
 ```
 
 #### Custom cache behavior
-
+Custom cache behaviors support the same config parameters as the default cache behavior (see the example above). 
 ```yml
 # serverless.yml
 
@@ -73,6 +84,12 @@ distribution:
           /static/images: # route any /static/images requests to https://my-assets.com
             ttl: 10
             allowedHttpMethods: ['GET', 'HEAD'] # optional
+            forward: # optional
+              headers: 'all' 
+              cookies: ['auth-token']
+              queryString: true
+            compress: false # optional
+            # ...
 ```
 
 #### Lambda@Edge
