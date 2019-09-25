@@ -74,7 +74,10 @@ class CloudFront extends Component {
       region: this.state.region
     })
 
-    await deleteCloudFrontDistribution(cf, this.state.id)
+    this.context.debug(
+      `Removing CloudFront distribution of ID ${this.state.id}. It could take a while.`
+    )
+    await deleteCloudFrontDistribution(cf, this.state.id, this.context.debug)
 
     this.state = {}
     await this.save()
