@@ -50,6 +50,7 @@ distribution:
   inputs:
     region: us-east-1
     enabled: true # optional
+    comment: 'My distribution' # optional
     defaults: # optional
       ttl: 15
       allowedHttpMethods: ['HEAD', 'GET']
