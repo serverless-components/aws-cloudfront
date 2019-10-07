@@ -259,6 +259,7 @@ Object {
       "Items": Array [],
       "Quantity": 0,
     },
+    "Comment": "",
     "DefaultCacheBehavior": Object {
       "AllowedMethods": Object {
         "CachedMethods": Object {

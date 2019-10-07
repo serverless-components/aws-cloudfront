@@ -198,6 +198,7 @@ Object {
       ],
       "Quantity": 1,
     },
+    "Comment": "",
     "DefaultCacheBehavior": Object {
       "AllowedMethods": Object {
         "CachedMethods": Object {
