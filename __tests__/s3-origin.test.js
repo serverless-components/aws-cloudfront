@@ -77,6 +77,60 @@ describe('S3 origins', () => {
     })
   })
 
+  describe('When origin is an S3 bucket URL with path', () => {
+    it('creates distribution', async () => {
+      await component.default({
+        origins: ['https://mybucket.s3.amazonaws.com/static']
+      })
+
+      assertHasOrigin(mockCreateDistribution, {
+        Id: 'mybucket/static',
+        DomainName: 'mybucket.s3.amazonaws.com',
+        S3OriginConfig: {
+          OriginAccessIdentity: ''
+        },
+        CustomHeaders: {
+          Quantity: 0,
+          Items: []
+        },
+        OriginPath: '/static'
+      })
+
+      expect(mockCreateDistribution.mock.calls[0][0]).toMatchSnapshot()
+    })
+  })
+
+  describe('When origin is an S3 website URL', () => {
+    it('creates custom origin not s3 origin distribution', async () => {
+      await component.default({
+        origins: ['https://mybucket.s3-website.amazonaws.com']
+      })
+
+      assertHasOrigin(mockCreateDistribution, {
+        Id: 'mybucket.s3-website.amazonaws.com',
+        DomainName: 'mybucket.s3-website.amazonaws.com',
+        CustomHeaders: {
+          Quantity: 0,
+          Items: []
+        },
+        CustomOriginConfig: {
+          HTTPPort: 80,
+          HTTPSPort: 443,
+          OriginProtocolPolicy: 'https-only',
+          OriginSslProtocols: {
+            Quantity: 1,
+            Items: ['TLSv1.2']
+          },
+          OriginReadTimeout: 30,
+          OriginKeepaliveTimeout: 5
+        },
+        OriginPath: ''
+      })
+
+      expect(mockCreateDistribution.mock.calls[0][0]).toMatchSnapshot()
+    })
+  })
+
   describe('When origin is an S3 URL only accessible via CloudFront', () => {
     it('creates distribution', async () => {
       mockCreateCloudFrontOriginAccessIdentityPromise.mockResolvedValueOnce({
