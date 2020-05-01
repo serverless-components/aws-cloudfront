@@ -24,8 +24,14 @@ describe('Input origin as a custom url', () => {
             '/some/path': {
               ttl: 10,
               'lambda@edge': {
-                'viewer-request': 'arn:aws:lambda:us-east-1:123:function:viewerRequestFunction',
-                'origin-request': 'arn:aws:lambda:us-east-1:123:function:originRequestFunction',
+                'viewer-request': {
+                  arn: 'arn:aws:lambda:us-east-1:123:function:viewerRequestFunction',
+                  includeBody: true
+                },
+                'origin-request': {
+                  arn: 'arn:aws:lambda:us-east-1:123:function:originRequestFunction',
+                  includeBody: false
+                },
                 'origin-response': 'arn:aws:lambda:us-east-1:123:function:originResponseFunction',
                 'viewer-response': 'arn:aws:lambda:us-east-1:123:function:viewerResponseFunction'
               }
@@ -48,17 +54,17 @@ describe('Input origin as a custom url', () => {
           {
             EventType: 'origin-request',
             LambdaFunctionARN: 'arn:aws:lambda:us-east-1:123:function:originRequestFunction',
-            IncludeBody: true
+            IncludeBody: false
           },
           {
             EventType: 'origin-response',
             LambdaFunctionARN: 'arn:aws:lambda:us-east-1:123:function:originResponseFunction',
-            IncludeBody: true
+            IncludeBody: false
           },
           {
             EventType: 'viewer-response',
             LambdaFunctionARN: 'arn:aws:lambda:us-east-1:123:function:viewerResponseFunction',
-            IncludeBody: true
+            IncludeBody: false
           }
         ]
       }
@@ -90,6 +96,33 @@ describe('Input origin as a custom url', () => {
       expect(err.message).toEqual(
         '"invalid-eventtype" is not a valid lambda trigger. See https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-cloudfront-trigger-events.html for valid event types.'
       )
+    }
+  })
+
+  it('throws error when includeBody given for event types other than request', async () => {
+    expect.assertions(1)
+
+    try {
+      await component.default({
+        origins: [
+          {
+            url: 'https://exampleorigin.com',
+            pathPatterns: {
+              '/some/path': {
+                ttl: 10,
+                'lambda@edge': {
+                  'viewer-response': {
+                    arn: 'arn:aws:lambda:us-east-1:123:function:viewerRequestFunction',
+                    includeBody: true
+                  }
+                }
+              }
+            }
+          }
+        ]
+      })
+    } catch (err) {
+      expect(err.message).toEqual('"includeBody" not allowed for viewer-response lambda triggers.')
     }
   })
 })
