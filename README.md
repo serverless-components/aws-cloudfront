@@ -108,6 +108,9 @@ distribution:
             ttl: 10
             lambda@edge:
               viewer-request: arn:aws:lambda:us-east-1:123:function:myFunc:version # lambda ARN including version
+              response-request: # can also send object to not include body
+                arn: lambda-arn
+                includeBody: false
 ```
 
 #### Private S3 Content

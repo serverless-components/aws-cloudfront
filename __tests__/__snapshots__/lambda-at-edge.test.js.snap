@@ -50,17 +50,17 @@ Object {
               },
               Object {
                 "EventType": "origin-request",
-                "IncludeBody": true,
+                "IncludeBody": false,
                 "LambdaFunctionARN": "arn:aws:lambda:us-east-1:123:function:originRequestFunction",
               },
               Object {
                 "EventType": "origin-response",
-                "IncludeBody": true,
+                "IncludeBody": false,
                 "LambdaFunctionARN": "arn:aws:lambda:us-east-1:123:function:originResponseFunction",
               },
               Object {
                 "EventType": "viewer-response",
-                "IncludeBody": true,
+                "IncludeBody": false,
                 "LambdaFunctionARN": "arn:aws:lambda:us-east-1:123:function:viewerResponseFunction",
               },
             ],

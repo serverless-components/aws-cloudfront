@@ -44,7 +44,8 @@ describe('Input origin as a custom url', () => {
       },
       origins: [
         {
-          url: 'https://mycustomorigin.com',
+          url: 'https://mycustomorigin.com/path',
+          protocolPolicy: 'http-only',
           pathPatterns: {
             '/sample/path': {
               ttl: 0,

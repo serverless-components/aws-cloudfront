@@ -57,7 +57,7 @@ Object {
           "MinTTL": 0,
           "PathPattern": "/sample/path",
           "SmoothStreaming": false,
-          "TargetOriginId": "mycustomorigin.com",
+          "TargetOriginId": "mycustomorigin.com/path",
           "TrustedSigners": Object {
             "Enabled": false,
             "Quantity": 0,
@@ -108,7 +108,7 @@ Object {
       "MaxTTL": 31536000,
       "MinTTL": 0,
       "SmoothStreaming": false,
-      "TargetOriginId": "mycustomorigin.com",
+      "TargetOriginId": "mycustomorigin.com/path",
       "TrustedSigners": Object {
         "Enabled": false,
         "Items": Array [],
@@ -129,7 +129,7 @@ Object {
             "HTTPPort": 80,
             "HTTPSPort": 443,
             "OriginKeepaliveTimeout": 5,
-            "OriginProtocolPolicy": "https-only",
+            "OriginProtocolPolicy": "http-only",
             "OriginReadTimeout": 30,
             "OriginSslProtocols": Object {
               "Items": Array [
@@ -139,8 +139,8 @@ Object {
             },
           },
           "DomainName": "mycustomorigin.com",
-          "Id": "mycustomorigin.com",
-          "OriginPath": "",
+          "Id": "mycustomorigin.com/path",
+          "OriginPath": "/path",
         },
       ],
       "Quantity": 1,
