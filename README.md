@@ -58,7 +58,7 @@ distribution:
         # array of header names, 'none' or 'all'
         headers: ['Accept', 'Accept-Language']
         # array of cookie names, 'none' or 'all'
-        cookies: ['my-cookie]
+        cookies: ['my-cookie']
         queryString: true
         queryStringCacheKeys: ['queryKey']
       viewerProtocolPolicy: 'https-only' # optional
